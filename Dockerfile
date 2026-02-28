@@ -1,8 +1,11 @@
 ARG CADDY_VERSION=2
 
-FROM --platform=$BUILDPLATFORM caddy:${CADDY_VERSION}-builder-alpine AS builder
+FROM --platform=$BUILDPLATFORM caddy:${CADDY_VERSION}-builder AS builder
 
-RUN xcaddy build \
+ARG TARGETOS
+ARG TARGETARCH
+
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} GOTOOLCHAIN=auto xcaddy build \
     --with github.com/lucaslorentz/caddy-docker-proxy/v2 \
     --with github.com/caddy-dns/cloudflare
 
